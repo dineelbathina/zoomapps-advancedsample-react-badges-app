@@ -1,0 +1,29 @@
+.badges-container {
+  width: 230px;
+  height: 28px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 4%;
+  border-radius: 8pt;
+  border: 1px solid #BABACC;
+  /*display: none;*/
+}
+
+.badge-hover-container {
+  width: 11%;
+  min-width: max-content;
+  border-radius: 5pt;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+.badge-hover-container .emoji {
+  cursor: pointer;
+}
+
+.badge-hover-container:hover{
+  background: #EFEFEF;
+}

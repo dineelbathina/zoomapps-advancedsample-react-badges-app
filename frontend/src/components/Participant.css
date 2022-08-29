@@ -1,0 +1,58 @@
+.participant-container {
+  width: 95%;
+  margin-bottom: 10px;
+  height: 32px;
+  border-radius: 8pt;
+
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 3%;
+/*  flex-wrap:nowrap;*/
+}
+
+.participant-container:hover {
+  background: #EFEFEF;
+}
+
+.participant-img-div{
+
+}
+
+.participant-name{
+  /*margin-left: 10px;*/
+  width:25%;
+  overflow: hidden;
+  white-space: nowrap;
+  /*font-family: 'SF Pro Text';*/
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: default;
+}
+
+.emoji-container{
+  width: 55%;
+}
+
+.emoji-flexbox{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  gap: 10px;
+}
+
+.emoji{
+  height: 100%;
+  cursor: default;
+  /*margin: 5px*/
+}
+
+.open-badges{
+  width: 10%;
+}
+
+.open-badges .emoji {
+  cursor: pointer;
+}

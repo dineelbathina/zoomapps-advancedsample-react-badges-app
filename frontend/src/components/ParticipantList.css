@@ -1,0 +1,9 @@
+.participant-list-container{
+  height: 100%;
+}
+
+.participant-list{
+  /*height: auto;*/
+  /*overflow-y: scroll;*/
+  overflow-x: hidden;
+}

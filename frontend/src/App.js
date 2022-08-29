@@ -6,6 +6,7 @@ import { Authorization } from "./components/Authorization";
 import ApiScrollview from "./components/ApiScrollview";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ParticipantList from "./components/ParticipantList";
 
 let once = 0; // to prevent increasing number of event listeners being added
 
@@ -191,25 +192,37 @@ function App() {
     );
   }
 
+  //TODO:
+  // Get all participants here, make a request to the db to store them all and then pass them to the participants list in the following format
+  // {name: "", badges
   return (
     <div className="App">
-      <h1>Hello{user ? ` ${user.first_name} ${user.last_name}` : " Zoom Apps user"}!</h1>
-      <p>{`User Context Status: ${userContextStatus}`}</p>
-      <p>
-        {runningContext ?
-          `Running Context: ${runningContext}` :
-          "Configuring Zoom JavaScript SDK..."
-        }
-      </p>
+      <ParticipantList isHost={true} participants={[{name: "selena", badges: ['0x1F396','0x1F4AF','0x2B50','0x1F9E0']}, {name: "selena really-really-long-name", badges: ['0x1F9E0', '0x1F9E0']}, {name:"Selena Shaw", badges: []}]}/>
+      {/*Long participant list for scroll bar testing
+      {[{name: "selena", badges: ['0x1F396','0x1F4AF','0x2B50','0x1F9E0']}, {name: "selena really-really-long-name", badges: ['0x1F9E0', '0x1F9E0']}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}, {name:"Selena Shaw", badges: []}]}
+      */}
 
-      <ApiScrollview />
-      <Authorization
-        handleError={setError}
-        handleUserContextStatus={setUserContextStatus}
-        handleUser={setUser}
-        user={user}
-        userContextStatus={userContextStatus}
-      />
+
+
+      {/*<Participant name={"Selena Shaw"} emojis = {['0x1F9E0','0x1F9E0','0x1F9E0','0x1F9E0']} />*/}
+      {/*<Participant name={"Selena Shaw2"} emojis = {[]} />*/}
+      {/*<h1>Hello {user ? ` ${user.first_name} ${user.last_name}` : " Zoom Apps user"}!</h1>*/}
+      {/*<p>{`User Context Status: ${userContextStatus}`}</p>*/}
+      {/*<p>*/}
+      {/*  {runningContext ?*/}
+      {/*    `Running Context: ${runningContext}` :*/}
+      {/*    "Configuring Zoom JavaScript SDK..."*/}
+      {/*  }*/}
+      {/*</p>*/}
+
+      {/*<ApiScrollview />*/}
+      {/*<Authorization*/}
+      {/*  handleError={setError}*/}
+      {/*  handleUserContextStatus={setUserContextStatus}*/}
+      {/*  handleUser={setUser}*/}
+      {/*  user={user}*/}
+      {/*  userContextStatus={userContextStatus}*/}
+      {/*/>*/}
 
     </div>
   );
