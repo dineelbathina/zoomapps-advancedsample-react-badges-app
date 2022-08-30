@@ -2,6 +2,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 const zoomApi = require('../../util/zoom-api')
 const zoomHelpers = require('../../util/zoom-helpers')
 const store = require('../../util/store')
+const Meeting = require("../../models/Meeting");
 
 module.exports = {
   // In-client OAuth 1/2
@@ -138,6 +139,14 @@ module.exports = {
     // 3. Redirect to url - the user can authenticate and authorize the app scopes securely on zoom.us
     console.log('3. Redirecting to redirect url', '\n')
     res.redirect(redirectUrl)
+  },
+
+  //Save meeting
+  async saveMeeting(req, res) {
+    let query = {'meetingId': req.body.meetingId};
+    await Meeting.findOneAndUpdate(query,req.body, {upsert: true},);
+    console.log('saving meeting model');
+    return res.json({ result: 'Success' })
   },
 
   // ZOOM OAUTH REDIRECT HANDLER ==============================================

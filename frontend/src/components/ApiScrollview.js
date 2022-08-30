@@ -29,7 +29,8 @@ function ApiScrollview() {
 
       <div className="api-buttons-list">
         {filteredApis?.map(api =>
-          <Button onClick={invokeZoomAppsSdk(api)}
+          <Button onClick={
+            invokeZoomAppsSdk(api)}
             className="api-button"
             key={api.buttonName ||
               api.name} > {api.buttonName || api.name}

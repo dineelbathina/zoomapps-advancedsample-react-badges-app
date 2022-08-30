@@ -5,7 +5,7 @@ services:
     working_dir: /home/node/app
     command: ["npm", "run", "start:dev"]
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:5000:5000"
       - "127.0.0.1:9229:9229"
     env_file:
       - ${ENV_FILE:-.env}
@@ -13,7 +13,7 @@ services:
       - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}
       - AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}
       - AUTH0_ISSUER_BASE_URL=${AUTH0_ISSUER_BASE_URL}
-      - PORT=3000
+      - PORT=5000
       - REDIS_ENCRYPTION_KEY=${REDIS_ENCRYPTION_KEY}
       - REDIS_URL=${REDIS_URL}
       - SESSION_SECRET=${SESSION_SECRET}
@@ -36,7 +36,7 @@ services:
     working_dir: /home/node/app
     command: "npm start"
     ports:
-      - "127.0.0.1:3001:9090"
+      - "127.0.0.1:3003:9090"
     environment:
       - PORT=9090
       - PUBLIC_URL=${PUBLIC_URL}/api/zoomapp/proxy
