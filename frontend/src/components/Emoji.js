@@ -11,10 +11,6 @@ class Emoji extends React.Component {
       <span className={this.props.classname} role="img" aria-label={this.props.label}>
                 {this.props.symbol}
             </span>)
-    // return (
-    //   <span className={this.props.classname} role="img" aria-label={this.props.label}>
-    //             {String.fromCodePoint(this.props.symbol)}
-    //         </span>)
   }
 }
 

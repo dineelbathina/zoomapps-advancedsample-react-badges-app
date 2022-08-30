@@ -8,18 +8,25 @@ class BadgesPopUp extends React.Component {
   }
 
   assignBadge(badge) {
-     console.log("here")
-    // add the badge to teh participant
-    //close the modal
-    // send to backend
-  }
-  // TODO:
-  // This needs to be turned into a modal component!!!
+   // send badge to backend
+    //TODO test sending to backend when participants are set up
 
-  // Need function for onclick of the emojis here that will:
-  // 1. add that emoji to the participant object (currently passing the props from the participant, I cant remember if there is a better way :)
-  // 2. Make a post request to the db to add that badge to the participant
-  // 3. ?Websocket notification?
+   //  fetch("meeting/badge", {
+   //    method: "POST",
+   //    body: JSON.stringify({
+   //      pid: participant.pid,
+   //      meetingId: meetingId,
+   //      badge: badge
+   //    }),
+   //    headers: {
+   //      "Content-Type": "application/json",
+   //    },
+   //  });
+
+    //close the modal
+    this.props.onSelect();
+  }
+
 
   render(){
     if(!this.props.show) {
@@ -28,7 +35,7 @@ class BadgesPopUp extends React.Component {
     return (
       <div className="badges-container">
         {this.props.badges.map((badge) =>
-          <div className="badge-hover-container" onClick={(badge)=>this.assignBadge(badge)}>
+          <div className="badge-hover-container" onClick={()=>this.assignBadge(badge)}>
             <Emoji symbol={badge} classname={"emoji"} label={"Emoji badge option"}/>
           </div>)}
       </div>
