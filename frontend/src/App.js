@@ -6,7 +6,6 @@ import { Authorization } from "./components/Authorization";
 import ApiScrollview from "./components/ApiScrollview";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import app from './components/immersive-app.js';
 
 let once = 0; // to prevent increasing number of event listeners being added
 
@@ -78,7 +77,7 @@ function App() {
         zoomSdk.onParticipantChange((data) => {
           console.log("on participant change", data);
         });
-        fetch("/api/zoomapp/saveMeeting", {
+        fetch("/meeting/save", {
           method: "POST",
           body: JSON.stringify({
               meetingId: meetingResponse.meetingID,
@@ -244,8 +243,5 @@ function App() {
   );
 }
 
-app.sdk.onParticipantChange(async ({ participants }) => {
-  console.log(participants);
-});
 
 export default App;
