@@ -141,13 +141,6 @@ module.exports = {
     res.redirect(redirectUrl)
   },
 
-  //Save meeting
-  async saveMeeting(req, res) {
-    let query = {'meetingId': req.body.meetingId};
-    await Meeting.findOneAndUpdate(query,req.body, {upsert: true},);
-    console.log('saving meeting model');
-    return res.json({ result: 'Success' })
-  },
 
   // ZOOM OAUTH REDIRECT HANDLER ==============================================
   // This route is called after the user has authorized the Zoom App on the

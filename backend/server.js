@@ -4,11 +4,11 @@
 
 require('./config')
 
-const { Meeting } = require("./models/Meeting");
 
 const http = require('http')
 const express = require('express')
 const morgan = require('morgan')
+const { Server } = require("socket.io");
 
 const { initializeDatabase } = require('./db')
 const middleware = require('./middleware')
@@ -17,8 +17,13 @@ const zoomAppRouter = require('./api/zoomapp/router')
 const zoomRouter = require('./api/zoom/router')
 const meetingRouter = require('./api/meeting/router')
 const thirdPartyOAuthRouter = require('./api/thirdpartyauth/router')
+
+
 // Create app
 const app = express()
+const server = http.createServer(app);
+const io = new Server(server);
+
 
 // Set view engine (for system browser error pages)
 app.set('view engine', 'pug')
@@ -51,7 +56,7 @@ if (
 app.use('/zoom', zoomRouter)
 
 // meeting router
-app.use('/meeting', meetingRouter)
+app.use('/api/zoomapp/meeting', meetingRouter)
 
 
 // Handle 404
@@ -71,7 +76,18 @@ app.use((error, req, res) => {
   })
 })
 
+io.on('connection', (socket) => {
+  console.log('a user connected');
+
+  socket.on('newParticipant', (meetingId) => {
+   // io.emit('participantListeners', )
+  })
+
+  // EMIT event with participant list within a listener
+
+});
+
 // Start express server
-http.createServer(app).listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log('Zoom App is listening on port', process.env.PORT)
 })
