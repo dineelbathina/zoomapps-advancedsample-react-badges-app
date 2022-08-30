@@ -11,7 +11,8 @@ let meeting = new Schema({
             screenName: { type: String, required: true },
             participantId: { type: String, required: true },
             participantUUID: { type: String },
-            role: String
+            role: String,
+            badges: []
         }
     ]
 });

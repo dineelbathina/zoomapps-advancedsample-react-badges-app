@@ -80,6 +80,8 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 
   socket.on('newParticipant', (meetingId) => {
+    // refresh 
+
    // io.emit('participantListeners', )
   })
 
