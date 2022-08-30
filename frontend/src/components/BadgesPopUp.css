@@ -1,5 +1,7 @@
 .badges-container {
-  width: 230px;
+  float:right;
+  margin-right: 5%;
+  width: 150px;
   height: 28px;
 
   display: flex;

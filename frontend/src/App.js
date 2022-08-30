@@ -22,11 +22,13 @@ function App() {
   const [counter, setCounter] = useState(0);
   const [preMeeting, setPreMeeting] = useState(true); // start with pre-meeting code
   const [userContextStatus, setUserContextStatus] = useState("");
+  const badgeHex = ['0x1F396', '0x1F4AF', '0x2B50', '0x1F4A1', '0x1F9E0'];
+  const badgeOptions = badgeHex.map((badge) => String.fromCodePoint(badge));
 
   const socketRef = useRef();
 
   // place your base url here
-  const address = 'https://anthonyenv-2.frp.zoomappgo.cloud';
+  const address = 'https://selenashaw1.frp.zoomappgo.cloud';
 
   useEffect(() => {
     socketRef.current = io(address);
@@ -80,7 +82,7 @@ function App() {
         });
         console.log("App configured", configResponse);
         const userContextResponse = await zoomSdk.getUserContext();
-        console.log("get meeeting context", userContextResponse);
+        console.log("get user context", userContextResponse);
         // The config method returns the running context of the Zoom App
         setRunningContext(configResponse.runningContext);
         setUserContextStatus(configResponse.auth.status);
@@ -110,7 +112,7 @@ function App() {
           zoomSdk.onShareApp((data) => {
             console.log(data);
           });
-      }          
+      }
 
       } catch (error) {
         console.log(error);
@@ -123,7 +125,7 @@ function App() {
     configureSdk();
   }, [counter]);
 
-  
+
 
   // PRE-MEETING
   let on_message_handler_client = useCallback(
@@ -236,28 +238,38 @@ function App() {
     );
   }
 
+  //TODO:
+  // Get all participants here, make a request to the db to store them all and then pass them to the participants list in the following format
+  // {name: "", badges
   return (
     <div className="App">
-      <h1>Hello{user ? ` ${user.first_name} ${user.last_name}` : " Zoom Apps user"}!</h1>
-      <p>{`User Context Status: ${userContextStatus}`}</p>
-      <p>
-        {runningContext ?
-          `Running Context: ${runningContext}` :
-          "Configuring Zoom JavaScript SDK..."
-        }
-      </p>
+      <ParticipantList isHost={true} badges={badgeOptions} participants={[{name: "selena", badges: [badgeOptions[0],badgeOptions[1],badgeOptions[2],badgeOptions[4]]}, {name: "selena", badges: [badgeOptions[3]]}, {name:"Selena Shaw", badges: []}]}/>
 
-      <ApiScrollview />
-      <Authorization
-        handleError={setError}
-        handleUserContextStatus={setUserContextStatus}
-        handleUser={setUser}
-        user={user}
-        userContextStatus={userContextStatus}
-      />
+
+
+      {/*<Participant name={"Selena Shaw"} emojis = {['0x1F9E0','0x1F9E0','0x1F9E0','0x1F9E0']} />*/}
+      {/*<Participant name={"Selena Shaw2"} emojis = {[]} />*/}
+      {/*<h1>Hello {user ? ` ${user.first_name} ${user.last_name}` : " Zoom Apps user"}!</h1>*/}
+      {/*<p>{`User Context Status: ${userContextStatus}`}</p>*/}
+      {/*<p>*/}
+      {/*  {runningContext ?*/}
+      {/*    `Running Context: ${runningContext}` :*/}
+      {/*    "Configuring Zoom JavaScript SDK..."*/}
+      {/*  }*/}
+      {/*</p>*/}
+
+      {/*<ApiScrollview />*/}
+      {/*<Authorization*/}
+      {/*  handleError={setError}*/}
+      {/*  handleUserContextStatus={setUserContextStatus}*/}
+      {/*  handleUser={setUser}*/}
+      {/*  user={user}*/}
+      {/*  userContextStatus={userContextStatus}*/}
+      {/*/>*/}
 
     </div>
   );
 }
+
 
 export default App;

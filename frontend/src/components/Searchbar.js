@@ -10,19 +10,14 @@ class Searchbar extends React.Component {
   }
 
   handleChange(e) {
-    // TODO:
-    // e isnt working, fix debug tools then find out why
-    // https://reactjs.org/docs/handling-events.html
     e.preventDefault();
     this.setState({input: e.target.value});
-    console.log("E: " + e.target.value);
-    // this.state.input += e.target.value;
-    console.log(this.state.input);
     if (this.state.input.length > 3) {
       let newlist=[];
       this.props.participants.filter((participant) => {
         // return may not be the right option, we need to make it so this set of participants are the only ones seen
         // make sure original list isnt lost when this is displayed
+        // store a list of all participants but also use this newlist when the input is > 3
         newlist.append(participant.name.match(this.state.input));
       })
     }

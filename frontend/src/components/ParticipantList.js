@@ -23,7 +23,7 @@ class ParticipantList extends React.Component {
       <div className="participant-list-container">
         <Searchbar participants={this.props.participants}/>
         <div className="participant-list">
-          {this.props.participants.map((participant) => <Participant name={participant.name} badges={participant.badges} />)}
+          {this.props.participants.map((participant) => <Participant name={participant.name} badges={participant.badges} badgeOptions={this.props.badges}/>)}
         </div>
       </div>
     )

@@ -9,8 +9,12 @@ class Emoji extends React.Component {
   render(){
     return (
       <span className={this.props.classname} role="img" aria-label={this.props.label}>
-                {String.fromCodePoint(this.props.symbol)}
+                {this.props.symbol}
             </span>)
+    // return (
+    //   <span className={this.props.classname} role="img" aria-label={this.props.label}>
+    //             {String.fromCodePoint(this.props.symbol)}
+    //         </span>)
   }
 }
 

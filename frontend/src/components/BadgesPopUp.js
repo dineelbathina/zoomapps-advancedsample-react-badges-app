@@ -6,6 +6,13 @@ class BadgesPopUp extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  assignBadge(badge) {
+     console.log("here")
+    // add the badge to teh participant
+    //close the modal
+    // send to backend
+  }
   // TODO:
   // This needs to be turned into a modal component!!!
 
@@ -15,10 +22,13 @@ class BadgesPopUp extends React.Component {
   // 3. ?Websocket notification?
 
   render(){
+    if(!this.props.show) {
+      return null;
+    };
     return (
       <div className="badges-container">
         {this.props.badges.map((badge) =>
-          <div className="badge-hover-container">
+          <div className="badge-hover-container" onClick={(badge)=>this.assignBadge(badge)}>
             <Emoji symbol={badge} classname={"emoji"} label={"Emoji badge option"}/>
           </div>)}
       </div>
