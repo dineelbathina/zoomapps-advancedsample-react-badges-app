@@ -16,7 +16,9 @@ class Participant extends React.Component {
     return (
       <div>
         <div className="participant-container">
+          {/* find where to get the image from*/}
           <div className="participant-img-div"></div>
+          {/* can we limit name length and use ... for longer ones*/}
           <div className="participant-name">{this.props.name}</div>
           <div className="emoji-container"><div className="emoji-flexbox">
             {this.props.badges.map((badge) => <Emoji classname={"emoji"} symbol={badge} label={"emoji badge"}/>)}

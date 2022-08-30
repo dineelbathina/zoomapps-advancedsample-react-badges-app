@@ -21,7 +21,7 @@
 
 .participant-name{
   /*margin-left: 10px;*/
-  width:25%;
+  width:30%;
   overflow: hidden;
   white-space: nowrap;
   /*font-family: 'SF Pro Text';*/
@@ -32,7 +32,7 @@
 }
 
 .emoji-container{
-  width: 55%;
+  width: 50%;
 }
 
 .emoji-flexbox{
@@ -40,7 +40,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: left;
-  gap: 10px;
+  gap: 5px;
 }
 
 .emoji{

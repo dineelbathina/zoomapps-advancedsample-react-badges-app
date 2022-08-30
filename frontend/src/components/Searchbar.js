@@ -14,7 +14,10 @@ class Searchbar extends React.Component {
     // e isnt working, fix debug tools then find out why
     // https://reactjs.org/docs/handling-events.html
     e.preventDefault();
-    this.state.input = e.target.value;
+    this.setState({input: e.target.value});
+    console.log("E: " + e.target.value);
+    // this.state.input += e.target.value;
+    console.log(this.state.input);
     if (this.state.input.length > 3) {
       let newlist=[];
       this.props.participants.filter((participant) => {
@@ -28,7 +31,7 @@ class Searchbar extends React.Component {
 
   render() {
     return (
-      <input className="searchbar" type="text" placeholder="Search participants" onChange={() => this.handleChange()} value={this.state.input} />
+      <input className="searchbar" type="text" placeholder="Search participants" value={this.state.input} onChange={(e) => this.handleChange(e)}  />
     );
   }
 

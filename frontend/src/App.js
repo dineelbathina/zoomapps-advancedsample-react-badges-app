@@ -6,6 +6,7 @@ import { Authorization } from "./components/Authorization";
 import ApiScrollview from "./components/ApiScrollview";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import app from './components/immersive-app.js';
 import ParticipantList from "./components/ParticipantList";
 
 let once = 0; // to prevent increasing number of event listeners being added
@@ -66,7 +67,7 @@ function App() {
         });
         console.log("App configured", configResponse);
         const userContextResponse = await zoomSdk.getUserContext();
-        console.log("get meeeting context", userContextResponse);
+        console.log("get user context", userContextResponse);
         // The config method returns the running context of the Zoom App
         setRunningContext(configResponse.runningContext);
         setUserContextStatus(configResponse.auth.status);
@@ -107,7 +108,7 @@ function App() {
     configureSdk();
   }, [counter]);
 
-  
+
 
   // PRE-MEETING
   let on_message_handler_client = useCallback(
@@ -256,5 +257,8 @@ function App() {
   );
 }
 
+app.sdk.onParticipantChange(async ({ participants }) => {
+  console.log(participants);
+});
 
 export default App;
