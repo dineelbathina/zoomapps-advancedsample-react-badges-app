@@ -6,7 +6,6 @@ import { Authorization } from "./components/Authorization";
 import ApiScrollview from "./components/ApiScrollview";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import app from './components/immersive-app.js';
 import ParticipantList from "./components/ParticipantList";
 
 let once = 0; // to prevent increasing number of event listeners being added
@@ -257,8 +256,5 @@ function App() {
   );
 }
 
-app.sdk.onParticipantChange(async ({ participants }) => {
-  console.log(participants);
-});
 
 export default App;
