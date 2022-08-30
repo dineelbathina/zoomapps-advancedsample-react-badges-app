@@ -4,54 +4,16 @@
 
 require('./config')
 
-const Meeting = require("./models/Meeting");
+const { Meeting } = require("./models/Meeting");
 
 const http = require('http')
 const express = require('express')
 const morgan = require('morgan')
 
 
+
+const { initializeDatabase } = require('./db')
 const middleware = require('./middleware')
-
-//Database
-
-  /** MongoDB config */
-  let uri = 'mongodb://mongo:27017/integrationHackathon';
-  let options = { useNewUrlParser: true, useUnifiedTopology: true };
-
-  // event for when the database first connects
-
-  const mongoose = require('mongoose');
-
-  mongoose.connect(uri, options);
- 
-  mongoose.connection.on('connected', () => {
-
-      const createMeetingAndParticipants = async () => {
-          const doesMeetingExist = await Meeting.findOne({ meetingId: '0'});
-
-          // if meeting does not exist, insert into db
-          if (!doesMeetingExist) {
-              await Meeting.create({ 
-                  meetingId: '0',
-                  meetingTopic: 'class meeting',
-                  hostUUID: 'required',
-                  participants: [
-                      { role: 'ROLES.STUDENT', participantId: '1', screenName: 'Anthony' },
-                      { role: 'ROLES.STUDENT', participantId: '2', screenName: 'Dineel' },
-                      { role: 'ROLES.STUDENT', participantId: '3', screenName: 'Patrick' },
-                      { role: 'ROLES.STUDENT', participantId: '4', screenName: 'Jaimie' },
-                      { role: 'ROLES.STUDENT', participantId: '5', screenName: 'Selena' },
-                      { role: 'ROLES.INSTRUCTOR', participantId: '6', screenName: 'Corey' },
-                      { role: 'ROLES.TA', participantId: '7', screenName: 'Vincent' },
-
-                  ]
-              })
-          }
-      }
-
-      createMeetingAndParticipants();
-    });
 
 const zoomAppRouter = require('./api/zoomapp/router')
 const zoomRouter = require('./api/zoom/router')
@@ -72,6 +34,9 @@ app.use(express.urlencoded({ extended: false }))
 app.use(middleware.session)
 app.use(middleware.setResponseHeaders)
 
+// database connection
+initializeDatabase();
+
 // Zoom App routes
 app.use('/api/zoomapp', zoomAppRouter)
 if (
@@ -86,13 +51,15 @@ if (
 
 app.use('/zoom', zoomRouter)
 
-app.get('/hello', async (req, res) => {
-  res.send('Hello Zoom Apps!')
+app.get('/meetings', async (req, res) => {
+  let ans = await Meeting.find();
+  res.json(ans)
 })
 
+// move to controller with authenticated routes
 app.post('/saveMeeting', async (req, res) => {
-  await Meeting.create(req);
-  res.send('Hello Zoom Apps!')
+  let ans = await Meeting.create(req);
+  res.json(ans)
 })
 
 // Handle 404

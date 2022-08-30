@@ -16,4 +16,6 @@ let meeting = new Schema({
     ]
 });
 
-module.exports = mongoose.model('Meeting', meeting);
+const Roles = { STUDENT: 'student', TA: 'ta', INSTRUCTOR: 'instructor'} 
+const Meeting =  mongoose.model('Meeting', meeting);
+module.exports = { Meeting, Roles }
