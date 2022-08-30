@@ -1,15 +1,21 @@
+
 'use strict'
 
+
 require('./config')
+
+const { Meeting } = require("./models/Meeting");
 
 const http = require('http')
 const express = require('express')
 const morgan = require('morgan')
 
+const { initializeDatabase } = require('./db')
 const middleware = require('./middleware')
 
 const zoomAppRouter = require('./api/zoomapp/router')
 const zoomRouter = require('./api/zoom/router')
+const meetingRouter = require('./api/meeting/router')
 const thirdPartyOAuthRouter = require('./api/thirdpartyauth/router')
 // Create app
 const app = express()
@@ -27,6 +33,9 @@ app.use(express.urlencoded({ extended: false }))
 app.use(middleware.session)
 app.use(middleware.setResponseHeaders)
 
+// database connection
+initializeDatabase();
+
 // Zoom App routes
 app.use('/api/zoomapp', zoomAppRouter)
 if (
@@ -41,9 +50,9 @@ if (
 
 app.use('/zoom', zoomRouter)
 
-app.get('/hello', (req, res) => {
-  res.send('Hello Zoom Apps!')
-})
+// meeting router
+app.use('/meeting', meetingRouter)
+
 
 // Handle 404
 app.use((req, res, next) => {

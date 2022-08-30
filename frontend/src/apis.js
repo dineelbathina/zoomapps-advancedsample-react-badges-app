@@ -3,13 +3,13 @@
 const invokeZoomAppsSdk = api => () => {
   const { name, buttonName = '', options = null } = api
   const zoomAppsSdkApi = zoomSdk[name].bind(zoomSdk)
-
+  console.log(name);
   zoomAppsSdkApi(options)
     .then(clientResponse => {
-      console.log(`${buttonName || name} success with response: ${JSON.stringify(clientResponse)}`);
+      console.log(clientResponse);
     })
     .catch(clientError => {
-      console.log(`${buttonName || name} error: ${JSON.stringify(clientError)}`);
+      console.log('${buttonName || name} error: ${JSON.stringify(clientError)}');
     });
 }
 

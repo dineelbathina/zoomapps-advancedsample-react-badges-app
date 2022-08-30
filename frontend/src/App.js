@@ -1,7 +1,7 @@
 /* globals zoomSdk */
 import { useLocation, useHistory } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
-import { apis, invokeZoomAppsSdk } from "./apis";
+import { apis } from "./apis";
 import { Authorization } from "./components/Authorization";
 import ApiScrollview from "./components/ApiScrollview";
 import "./App.css";
@@ -29,6 +29,7 @@ function App() {
       }, 120 * 60 * 1000);
 
       try {
+        console.log("App Started");
         // Configure the JS SDK, required to call JS APIs in the Zoom App
         // These items must be selected in the Features -> Zoom App SDK -> Add APIs tool in Marketplace
         const configResponse = await zoomSdk.config({
@@ -41,6 +42,7 @@ function App() {
             "onShareApp",
             "onActiveSpeakerChange",
             "onMeeting",
+            "onParticipantChange",
 
             // connect api and event
             "connect",
@@ -49,6 +51,8 @@ function App() {
             "onMessage",
 
             // in-client api and event
+            "getMeetingParticipants",
+            "getMeetingContext",
             "authorize",
             "onAuthorized",
             "promptAuthorize",
@@ -61,15 +65,37 @@ function App() {
           version: "0.16.0",
         });
         console.log("App configured", configResponse);
+        const userContextResponse = await zoomSdk.getUserContext();
+        console.log("get meeeting context", userContextResponse);
         // The config method returns the running context of the Zoom App
         setRunningContext(configResponse.runningContext);
         setUserContextStatus(configResponse.auth.status);
-        zoomSdk.onSendAppInvitation((data) => {
-          console.log(data);
+        if(userContextResponse.role!=="attendee"){
+        const meetingResponse = await zoomSdk.getMeetingContext();
+        console.log("get meeeting context", meetingResponse);
+        const getMeetingParticipantsResponse = await zoomSdk.getMeetingParticipants();
+        console.log("get participants", getMeetingParticipantsResponse);
+        zoomSdk.onParticipantChange((data) => {
+          console.log("on participant change", data);
+        });
+        fetch("/meeting/save", {
+          method: "POST",
+          body: JSON.stringify({
+              meetingId: meetingResponse.meetingID,
+              meetingTopic: meetingResponse.meetingTopic,
+              hostUUID: userContextResponse.participantUUID,
+              participants: [
+                  { role: userContextResponse.role, participantId: '2', screenName: userContextResponse.screenName }
+
+              ]
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
         zoomSdk.onShareApp((data) => {
           console.log(data);
-        });
+        });}
       } catch (error) {
         console.log(error);
         setError("There was an error configuring the JS SDK");
@@ -80,6 +106,8 @@ function App() {
     }
     configureSdk();
   }, [counter]);
+
+  
 
   // PRE-MEETING
   let on_message_handler_client = useCallback(
@@ -227,5 +255,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
