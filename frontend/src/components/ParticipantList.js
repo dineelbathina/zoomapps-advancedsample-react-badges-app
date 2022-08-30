@@ -1,0 +1,34 @@
+import React from 'react';
+import './ParticipantList.css';
+import Participant from "./Participant.js";
+import Searchbar from "./Searchbar";
+
+
+class ParticipantList extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  // TODO:
+  // Need to add scrolling functionality for when teh list of participants gets long
+  //    pin search bar to the top, only the participant-list stuff should scroll
+
+  // Figure out if participant sdk and backend calls are going here or in App.js
+
+  // What is the best way to update a user changing their name? or a user joining the call?
+  //    is it better to append to the list of divs instead of rebuilding teh list of divs?
+
+  render(){
+    return (
+      <div className="participant-list-container">
+        <Searchbar participants={this.props.participants}/>
+        <div className="participant-list">
+          {this.props.participants.map((participant) => <Participant name={participant.name} badges={participant.badges} />)}
+        </div>
+      </div>
+    )
+  }
+
+}
+
+export default ParticipantList
