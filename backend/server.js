@@ -10,13 +10,12 @@ const http = require('http')
 const express = require('express')
 const morgan = require('morgan')
 
-
-
 const { initializeDatabase } = require('./db')
 const middleware = require('./middleware')
 
 const zoomAppRouter = require('./api/zoomapp/router')
 const zoomRouter = require('./api/zoom/router')
+const meetingRouter = require('./api/meeting/router')
 const thirdPartyOAuthRouter = require('./api/thirdpartyauth/router')
 // Create app
 const app = express()
@@ -51,16 +50,9 @@ if (
 
 app.use('/zoom', zoomRouter)
 
-app.get('/meetings', async (req, res) => {
-  let ans = await Meeting.find();
-  res.json(ans)
-})
+// meeting router
+app.use('/meeting', meetingRouter)
 
-// move to controller with authenticated routes
-app.post('/saveMeeting', async (req, res) => {
-  let ans = await Meeting.create(req);
-  res.json(ans)
-})
 
 // Handle 404
 app.use((req, res, next) => {
