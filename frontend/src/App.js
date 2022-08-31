@@ -22,13 +22,15 @@ function App() {
   const [counter, setCounter] = useState(0);
   const [preMeeting, setPreMeeting] = useState(true); // start with pre-meeting code
   const [userContextStatus, setUserContextStatus] = useState("");
+  const [participants, setParticipants] = useState([])
+
   const badgeHex = ['0x1F396', '0x1F4AF', '0x2B50', '0x1F4A1', '0x1F9E0'];
   const badgeOptions = badgeHex.map((badge) => String.fromCodePoint(badge));
 
   const socketRef = useRef();
 
   // place your base url here
-  const address = 'https://dineel5.frp.zoomappgo.cloud';
+  const address = 'YOUR_FRP_HERE';
 
   useEffect(() => {
     socketRef.current = io(address);
@@ -90,6 +92,7 @@ function App() {
           console.log("get meeeting context", meetingResponse);
         if (userContextResponse.role !== "attendee") {
           const getMeetingParticipantsResponse = await zoomSdk.getMeetingParticipants();
+          setParticipants(getMeetingParticipantsResponse)
           console.log("get participants", getMeetingParticipantsResponse);
           zoomSdk.onParticipantChange((data) => {
             console.log("on participant change", data);
@@ -258,7 +261,7 @@ function App() {
   // {name: "", badges
   return (
     <div className="App">
-      <ParticipantList isHost={true} badges={badgeOptions} participants={[{name: "selena", badges: [badgeOptions[0],badgeOptions[1],badgeOptions[2],badgeOptions[4]]}, {name: "selena", badges: [badgeOptions[3]]}, {name:"Selena Shaw", badges: []}]}/>
+      <ParticipantList isHost={true} badges={badgeOptions} participants={[{name: "selena", badges: [badgeOptions[0],badgeOptions[1],badgeOptions[2],badgeOptions[4]]}, {name: "jaimie", badges: [badgeOptions[3]]}, {name:"evelyn", badges: []}]}/>
 
 
 
