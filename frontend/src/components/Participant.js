@@ -19,8 +19,8 @@ class Participant extends React.Component {
   render(){
     return (
       <div >
-        <BadgesPopUp badges={this.props.badgeOptions} participant={this.props} show={this.state.modal} onSelect={()=>this.setPopup()}/>
-        <div className="participant-container">
+        {/*TODO: replace badges={this.props.badgeOptions} with badges={this.props.participant.badgeOptions}*/}
+        <BadgesPopUp badges={this.props.badgeOptions} participant={this.props} show={this.state.modal} onSelect={()=>this.setPopup()} assignedBadge={[this.props.badgeOptions[0]]}/>        <div className="participant-container">
           {/* find where to get the image from*/}
           <div className="participant-img-div"></div>
           {/* can we limit name length and use ... for longer ones*/}
