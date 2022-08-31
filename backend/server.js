@@ -17,6 +17,7 @@ const zoomAppRouter = require('./api/zoomapp/router')
 const zoomRouter = require('./api/zoom/router')
 const meetingRouter = require('./api/meeting/router')
 const thirdPartyOAuthRouter = require('./api/thirdpartyauth/router')
+const { Meeting } = require('./models/Meeting')
 
 
 // Create app
@@ -78,14 +79,33 @@ app.use((error, req, res) => {
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-
-  socket.on('newParticipant', (meetingId) => {
+  socket.on('newParticipant', async ({ participants }, meetingResponse) => {
     // refresh 
+    let meeting = await Meeting.findOne({ meetingId: meetingResponse.meetingID });
 
-   // io.emit('participantListeners', )
+    // either add or remove participants
+    for (let participant of participants) {
+      if (participant.status === 'join') {
+        meeting.participants.push({
+          screenName: participant.screenName,
+          participantUUID: participant.participantUUID,
+          participantId: participant.participantId,
+          role: 'attendee'
+        })
+      } else {
+        // remove
+        meeting.participants = meeting.participants.filter((p) => {
+          return p.participantUUID != participant.participantUUID;
+        })
+      }
+    }
+
+    // save to db
+    await meeting.save();
+
+    // send client updated meeting
+    io.emit('updatedMeeting', meeting);
   })
-
-  // EMIT event with participant list within a listener
 
 });
 

@@ -27,6 +27,8 @@ function App() {
   const badgeHex = ['0x1F396', '0x1F4AF', '0x2B50', '0x1F4A1', '0x1F9E0'];
   const badgeOptions = badgeHex.map((badge) => String.fromCodePoint(badge));
 
+  const [newMeeting, setNewMeeting] = useState();
+
   const socketRef = useRef();
 
   // place your base url here
@@ -34,9 +36,17 @@ function App() {
 
   useEffect(() => {
     socketRef.current = io(address);
+
     socketRef.current.on('connection', (_) => {
-      console.log('connected')
+
     })
+
+    socketRef.current.on('updatedMeeting', (updatedMeeting) => {
+      // set state with the object in paramter
+      setNewMeeting(updatedMeeting);
+    })
+
+
   }, [])
 
   useEffect(() => {
@@ -95,23 +105,10 @@ function App() {
           setParticipants(getMeetingParticipantsResponse)
           console.log("get participants", getMeetingParticipantsResponse);
           zoomSdk.onParticipantChange((data) => {
-            console.log("on participant change", data);
-            fetch("meeting/updateParticipants", {
-              method: "POST",
-              body: JSON.stringify({
-                  meetingId: meetingResponse.meetingID,
-                  screenName: data.participants[0].screenName,
-                  participant: 
-                      { role: data.participants[0].role, participantId: data.participants[0].participantId, screenName: data.participants[0].screenName }
-  
-                  
-              }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
-            console.log("on participant done", data);
+            // double check the meetingResponse object to see which property meeting id is
+            socketRef.current.emit('newParticipant', data, meetingResponse)
           });
+          
           fetch("meeting/save", {
             method: "POST",
             body: JSON.stringify({
@@ -261,7 +258,13 @@ function App() {
   // {name: "", badges
   return (
     <div className="App">
-      <ParticipantList isHost={true} badges={badgeOptions} participants={[{name: "selena", badges: [badgeOptions[0],badgeOptions[1],badgeOptions[2],badgeOptions[4]]}, {name: "jaimie", badges: [badgeOptions[3]]}, {name:"evelyn", badges: []}]}/>
+      <div>{JSON.stringify(newMeeting)}</div>
+      <ParticipantList 
+        isHost={true} 
+        badges={badgeOptions}
+        participants={[{name: "selena", badges: [badgeOptions[0],badgeOptions[1],badgeOptions[2],badgeOptions[4]]}, 
+        {name: "jaimie", badges: [badgeOptions[3]]}, {name:"evelyn", badges: []}]}
+      />
 
 
 
@@ -284,7 +287,6 @@ function App() {
       {/*  user={user}*/}
       {/*  userContextStatus={userContextStatus}*/}
       {/*/>*/}
-
     </div>
   );
 }
