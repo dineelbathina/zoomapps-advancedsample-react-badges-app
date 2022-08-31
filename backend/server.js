@@ -79,24 +79,49 @@ app.use((error, req, res) => {
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+
+  // new event for adding badge
+
+  socket.on('newBadge', async (participantName, meetingId, badge) => {
+    const meeting = await Meeting.findOne({ meetingId });
+    meeting.participants = meeting.participants.map((p) => {
+      if (p.screenName == participantName) {
+          p.badges.push(badge)
+      }
+
+      return p;
+    })
+      
+    await meeting.save();
+  })
+
   socket.on('newParticipant', async ({ participants }, meetingResponse) => {
     // refresh 
     let meeting = await Meeting.findOne({ meetingId: meetingResponse.meetingID });
-
     // either add or remove participants
     for (let participant of participants) {
       if (participant.status === 'join') {
-        meeting.participants.push({
-          screenName: participant.screenName,
-          participantUUID: participant.participantUUID,
-          participantId: participant.participantId,
-          role: 'attendee'
-        })
+        let doesExist = false;
+        for (let p of meeting.participants) {
+          if (p.screenName == participant.screenName) {
+            doesExist = true;
+          }
+        }
+
+        if (!doesExist) {
+          meeting.participants.push({
+            screenName: participant.screenName,
+            participantUUID: participant.participantUUID,
+            participantId: participant.participantId,
+            role: 'attendee'
+          })
+        }
+
       } else {
         // remove
-        meeting.participants = meeting.participants.filter((p) => {
-          return p.participantUUID != participant.participantUUID;
-        })
+        // meeting.participants = meeting.participants.filter((p) => {
+        //   return p.participantUUID != participant.participantUUID;
+        // })
       }
     }
 

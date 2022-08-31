@@ -8,6 +8,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ParticipantList from "./components/ParticipantList";
 import { io } from "socket.io-client";
+import Participant from "./components/Participant";
 
 
 let once = 0; // to prevent increasing number of event listeners being added
@@ -23,16 +24,18 @@ function App() {
   const [preMeeting, setPreMeeting] = useState(true); // start with pre-meeting code
   const [userContextStatus, setUserContextStatus] = useState("");
   const [participants, setParticipants] = useState([])
+  const [newBadge, setNewBadge] = useState();
 
   const badgeHex = ['0x1F396', '0x1F4AF', '0x2B50', '0x1F4A1', '0x1F9E0'];
   const badgeOptions = badgeHex.map((badge) => String.fromCodePoint(badge));
 
-  const [newMeeting, setNewMeeting] = useState();
+  const [meetingContext, setMeetingContext] = useState({});
+
 
   const socketRef = useRef();
 
   // place your base url here
-  const address = 'YOUR_FRP_HERE';
+  const address = 'https://anthonyenv-2.frp.zoomappgo.cloud/';
 
   useEffect(() => {
     socketRef.current = io(address);
@@ -43,7 +46,7 @@ function App() {
 
     socketRef.current.on('updatedMeeting', (updatedMeeting) => {
       // set state with the object in paramter
-      setNewMeeting(updatedMeeting);
+      setParticipants(updatedMeeting.participants);
     })
 
 
@@ -99,10 +102,11 @@ function App() {
         setRunningContext(configResponse.runningContext);
         setUserContextStatus(configResponse.auth.status);
         const meetingResponse = await zoomSdk.getMeetingContext();
+        setMeetingContext(meetingResponse)
           console.log("get meeeting context", meetingResponse);
         if (userContextResponse.role !== "attendee") {
           const getMeetingParticipantsResponse = await zoomSdk.getMeetingParticipants();
-          setParticipants(getMeetingParticipantsResponse)
+          setParticipants(getMeetingParticipantsResponse.participants)
           console.log("get participants", getMeetingParticipantsResponse);
           zoomSdk.onParticipantChange((data) => {
             // double check the meetingResponse object to see which property meeting id is
@@ -258,35 +262,28 @@ function App() {
   // {name: "", badges
   return (
     <div className="App">
-      <div>{JSON.stringify(newMeeting)}</div>
-      <ParticipantList 
+      <div>{JSON.stringify(participants)}</div>
+    {/* Two problems here:
+        1. ParticipantList child component does not rerender when state changes here (for a few reasons), 
+        my suggestion is to get rid of this and directly output the participants here
+
+        2. Many of the componenets use property `name` on participant, but this should be `screenName` 
+
+    */}
+      {/* <ParticipantList 
         isHost={true} 
         badges={badgeOptions}
-        participants={[{name: "selena", badges: [badgeOptions[0],badgeOptions[1],badgeOptions[2],badgeOptions[4]]}, 
-        {name: "jaimie", badges: [badgeOptions[3]]}, {name:"evelyn", badges: []}]}
-      />
+        participants={participants ? participants : []}
+      /> */}
 
+      {participants ? participants.map((p, i) => {
+      return (
+        <div>
+          <div>{p.screenName}</div>
+        </div>
+        )
+      }) : null}
 
-
-      {/*<Participant name={"Selena Shaw"} emojis = {['0x1F9E0','0x1F9E0','0x1F9E0','0x1F9E0']} />*/}
-      {/*<Participant name={"Selena Shaw2"} emojis = {[]} />*/}
-      {/*<h1>Hello {user ? ` ${user.first_name} ${user.last_name}` : " Zoom Apps user"}!</h1>*/}
-      {/*<p>{`User Context Status: ${userContextStatus}`}</p>*/}
-      {/*<p>*/}
-      {/*  {runningContext ?*/}
-      {/*    `Running Context: ${runningContext}` :*/}
-      {/*    "Configuring Zoom JavaScript SDK..."*/}
-      {/*  }*/}
-      {/*</p>*/}
-
-      {/*<ApiScrollview />*/}
-      {/*<Authorization*/}
-      {/*  handleError={setError}*/}
-      {/*  handleUserContextStatus={setUserContextStatus}*/}
-      {/*  handleUser={setUser}*/}
-      {/*  user={user}*/}
-      {/*  userContextStatus={userContextStatus}*/}
-      {/*/>*/}
     </div>
   );
 }
