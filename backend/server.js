@@ -93,6 +93,7 @@ io.on('connection', (socket) => {
     })
       
     await meeting.save();
+    io.emit('updatedMeeting', meeting);
   })
 
   socket.on('newParticipant', async ({ participants }, meetingResponse) => {
