@@ -7,6 +7,15 @@ import Searchbar from "./Searchbar";
 class ParticipantList extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      participants: this.props.participants
+    }
+  }
+
+  setParticipants = (participants) => {
+    this.setState({
+      participants: participants
+    })
   }
 
   // TODO:
@@ -21,9 +30,9 @@ class ParticipantList extends React.Component {
   render(){
     return (
       <div className="participant-list-container">
-        <Searchbar participants={this.props.participants}/>
+        <Searchbar participants={ this.state.participants } setParticipants={ this.setParticipants }/>
         <div className="participant-list">
-          {this.props.participants.map((participant) => <Participant name={participant.name} badges={participant.badges} badgeOptions={this.props.badges}/>)}
+          {this.state.participants.map((participant) => <Participant name={participant.name} badges={participant.badges} badgeOptions={this.props.badges}/>)}
         </div>
       </div>
     )
@@ -32,3 +41,4 @@ class ParticipantList extends React.Component {
 }
 
 export default ParticipantList
+
