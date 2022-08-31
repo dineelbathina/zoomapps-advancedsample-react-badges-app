@@ -109,6 +109,7 @@ function App() {
         const meetingUUIDResponse = await zoomSdk.getMeetingUUID();
         console.log("meeting UUID ========="+meetingUUIDResponse.meetingUUID);
         setMeetingId(meetingUUIDResponse.meetingUUID);
+        socketRef.current.emit('getMeetingForParticipants',meetingUUIDResponse.meetingUUID);
         if (userContextResponse.role !== "attendee") {
           const meetingResponse = await zoomSdk.getMeetingContext();
         // setMeetingContext(meetingResponse)

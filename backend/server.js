@@ -96,13 +96,12 @@ io.on('connection', (socket) => {
     io.emit('updatedMeeting', meeting);
   })
 
-  // // get event for attendees
+  // get event for attendees
 
-  // socket.on('getMeetingForParticipants', async ( meetingId ) => {
-  //   const meeting = await Meeting.findOne({ meetingId });
-  //   await meeting.save();
-  //   io.emit('updatedMeeting', meeting);
-  // })
+  socket.on('getMeetingForParticipants', async ( meetingId ) => {
+    const meeting = await Meeting.findOne({ meetingId });
+    io.emit('updatedMeeting', meeting);
+  })
 
   socket.on('newParticipant', async ({ participants }, meetingResponse, meetingId) => {
     // refresh
