@@ -12,6 +12,7 @@ class Participant extends React.Component {
   }
 
   setPopup() {
+    console.log(this.state)
     this.setState({modal: !this.state.modal});
   };
 
@@ -22,7 +23,8 @@ class Participant extends React.Component {
         {/*TODO: get badges, assignedBadge of the participant*/}
         {/*replace badges={this.props.badgeOptions} with badges={this.props.participant.badgeOptions}*/}
         {/*replace assignedBadge  with assignedBadge={this.props.participant.badges}*/}
-        <BadgesPopUp badges={this.props.badgeOptions} participant={this.props} show={this.state.modal} onSelect={()=>this.setPopup()} assignedBadge={[this.props.badgeOptions[0]]}/>
+
+        <BadgesPopUp meetingId={this.props.meetingId} name={this.props.name} socketRef={this.props.socketRef} badges={this.props.badgeOptions} participant={this.props} show={this.state.modal} onSelect={()=>this.setPopup()} assignedBadge={this.props.badges}/>
         <div className="participant-container">
           {/* find where to get the image from*/}
           <div className="participant-img-div"></div>
@@ -34,7 +36,12 @@ class Participant extends React.Component {
           {/* TODO: */}
           {/* add conditional for if host v if student for the 3 dot option */}
           {/* Currently is an emoji instead of Jaimie's design as a quick fix*/}
+
+          {this.props.isHost ? 
           <div className="open-badges" onClick={()=>this.setPopup()}><Emoji classname="emoji" symbol={String.fromCodePoint('0x2795')} label={'add badge'}/></div>
+            :
+            null
+          }
         </div>
       </div>
     )

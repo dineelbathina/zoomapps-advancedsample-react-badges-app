@@ -22,7 +22,7 @@ function App() {
   const [connected, setConnected] = useState(false);
   const [counter, setCounter] = useState(0);
   const [preMeeting, setPreMeeting] = useState(true); // start with pre-meeting code
-  const [userContextStatus, setUserContextStatus] = useState("");
+  const [currentUserRole, setCurrentUserRole] = useState("");
   const [participants, setParticipants] = useState([])
   const [newBadge, setNewBadge] = useState();
 
@@ -100,14 +100,17 @@ function App() {
         console.log("get user context", userContextResponse);
         // The config method returns the running context of the Zoom App
         setRunningContext(configResponse.runningContext);
-        setUserContextStatus(configResponse.auth.status);
+        setCurrentUserRole(userContextResponse.role)
+
+        console.log(configResponse)
         const meetingResponse = await zoomSdk.getMeetingContext();
         setMeetingContext(meetingResponse)
           console.log("get meeeting context", meetingResponse);
         if (userContextResponse.role !== "attendee") {
           const getMeetingParticipantsResponse = await zoomSdk.getMeetingParticipants();
-          setParticipants(getMeetingParticipantsResponse.participants)
-          console.log("get participants", getMeetingParticipantsResponse);
+         // setParticipants(getMeetingParticipantsResponse.participants)
+         socketRef.current.emit('newParticipant', { participants: [] }, meetingResponse)
+         // console.log("get participants", getMeetingParticipantsResponse);
           zoomSdk.onParticipantChange((data) => {
             // double check the meetingResponse object to see which property meeting id is
             socketRef.current.emit('newParticipant', data, meetingResponse)
@@ -262,27 +265,18 @@ function App() {
   // {name: "", badges
   return (
     <div className="App">
-      <div>{JSON.stringify(participants)}</div>
-    {/* Two problems here:
-        1. ParticipantList child component does not rerender when state changes here (for a few reasons), 
-        my suggestion is to get rid of this and directly output the participants here
-
-        2. Many of the componenets use property `name` on participant, but this should be `screenName` 
-
-    */}
-      {/* <ParticipantList 
-        isHost={true} 
-        badges={badgeOptions}
-        participants={participants ? participants : []}
-      /> */}
-
-      {participants ? participants.map((p, i) => {
-      return (
-        <div>
-          <div>{p.screenName}</div>
-        </div>
-        )
-      }) : null}
+    <div className="participant-list-container">
+      <div className="participant-list">
+        {participants ? participants.map((p) => {
+          console.log(p)
+        return (
+          <div>
+            <Participant isHost={currentUserRole == 'host'} meetingId={meetingContext.meetingID} socketRef={socketRef.current} name={p.screenName} badges={!p.badges ? [] : p.badges} badgeOptions={badgeOptions} />
+          </div>
+          )
+        }) : null}
+      </div>
+    </div>
 
     </div>
   );

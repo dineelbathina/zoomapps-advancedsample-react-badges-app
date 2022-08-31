@@ -18,6 +18,11 @@ class BadgesPopUp extends React.Component {
   }
 
   assignBadge(badge,idx) {
+
+    let socket = this.props.socketRef;
+// participantName, meetingId, badge
+    socket.emit('newBadge', this.props.name, this.props.meetingId, badge)
+
     console.log("before assign");
     console.log(this.props.assignedBadge);
     const optionList = this.removeAssignedBadge(this.props.assignedBadge);
@@ -49,7 +54,10 @@ class BadgesPopUp extends React.Component {
   }
 
 
+  // only display option to add, if the current user is the host 
   render(){
+    console.log(this.props)
+
     if(!this.props.show) {
       return null;
     };
