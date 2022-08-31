@@ -35,7 +35,7 @@ function App() {
   const socketRef = useRef();
 
   // place your base url here
-  const address = 'https://anthonyenv-2.frp.zoomappgo.cloud/';
+  const address = 'https://dineel5.frp.zoomappgo.cloud/';
 
   useEffect(() => {
     socketRef.current = io(address);
@@ -107,9 +107,7 @@ function App() {
         setMeetingContext(meetingResponse)
           console.log("get meeeting context", meetingResponse);
         if (userContextResponse.role !== "attendee") {
-          const getMeetingParticipantsResponse = await zoomSdk.getMeetingParticipants();
-         // setParticipants(getMeetingParticipantsResponse.participants)
-         socketRef.current.emit('newParticipant', { participants: [] }, meetingResponse)
+          
          // console.log("get participants", getMeetingParticipantsResponse);
           zoomSdk.onParticipantChange((data) => {
             // double check the meetingResponse object to see which property meeting id is
@@ -130,6 +128,10 @@ function App() {
             headers: {
               "Content-Type": "application/json",
             },
+          }).then(async () => {
+            const getMeetingParticipantsResponse = await zoomSdk.getMeetingParticipants();
+            // setParticipants(getMeetingParticipantsResponse.participants)
+            socketRef.current.emit('newParticipant', { participants: [] }, meetingResponse)
           });
           zoomSdk.onShareApp((data) => {
             console.log(data);

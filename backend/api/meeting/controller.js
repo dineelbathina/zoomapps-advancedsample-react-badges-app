@@ -24,7 +24,7 @@ module.exports = {
     async saveMeeting(req, res) {
         let query = {'meetingId' : req.body.meetingId};
         const meeting = await Meeting.find(query);
-        if (!meeting) {
+        if (meeting.length===0) {
             await Meeting.findOneAndUpdate(query, req.body, {upsert: true},);
         }
         return res.send({ status: true })
