@@ -19,7 +19,7 @@ class Participant extends React.Component {
   render(){
     return (
       <div >
-        {/*TODO:*/}
+        {/*TODO: get badges, assignedBadge of the participant*/}
         {/*replace badges={this.props.badgeOptions} with badges={this.props.participant.badgeOptions}*/}
         {/*replace assignedBadge  with assignedBadge={this.props.participant.badges}*/}
         <BadgesPopUp badges={this.props.badgeOptions} participant={this.props} show={this.state.modal} onSelect={()=>this.setPopup()} assignedBadge={[this.props.badgeOptions[0]]}/>        <div className="participant-container">
