@@ -18,7 +18,6 @@ class BadgesPopUp extends React.Component {
   }
 
   assignBadge(badge,idx) {
-    console.log(idx,badge);
     console.log("before assign");
     console.log(this.props.assignedBadge);
     const optionList = this.removeAssignedBadge(this.props.assignedBadge);
