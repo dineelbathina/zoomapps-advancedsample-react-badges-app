@@ -29,7 +29,7 @@ function App() {
   const badgeHex = ['0x1F396', '0x1F4AF', '0x2B50', '0x1F4A1', '0x1F9E0'];
   const badgeOptions = badgeHex.map((badge) => String.fromCodePoint(badge));
 
-  const [meetingContext, setMeetingContext] = useState({});
+  const [meetingId, setMeetingId] = useState("");
 
 
   const socketRef = useRef();
@@ -74,6 +74,7 @@ function App() {
             "onActiveSpeakerChange",
             "onMeeting",
             "onParticipantChange",
+            "getMeetingUUID",
 
             // connect api and event
             "connect",
@@ -101,12 +102,13 @@ function App() {
         // The config method returns the running context of the Zoom App
         setRunningContext(configResponse.runningContext);
         setCurrentUserRole(userContextResponse.role)
-
-        console.log(configResponse)
-        const meetingResponse = await zoomSdk.getMeetingContext();
-        setMeetingContext(meetingResponse)
-          console.log("get meeeting context", meetingResponse);
+        const meetingUUIDResponse = await zoomSdk.getMeetingUUID();
+        console.log("meeting UUID ========="+meetingUUIDResponse.meetingUUID);
+        setMeetingId(meetingUUIDResponse.meetingUUID);
         if (userContextResponse.role !== "attendee") {
+          const meetingResponse = await zoomSdk.getMeetingContext();
+        // setMeetingContext(meetingResponse)
+          console.log("get meeeting context", meetingResponse);
           
          // console.log("get participants", getMeetingParticipantsResponse);
           zoomSdk.onParticipantChange((data) => {
@@ -117,7 +119,7 @@ function App() {
           fetch("meeting/save", {
             method: "POST",
             body: JSON.stringify({
-                meetingId: meetingResponse.meetingID,
+                meetingId: meetingUUIDResponse.meetingUUID,
                 meetingTopic: meetingResponse.meetingTopic,
                 hostUUID: userContextResponse.screenName,
                 participants: [
