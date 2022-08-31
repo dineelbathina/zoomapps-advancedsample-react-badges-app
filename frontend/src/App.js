@@ -9,6 +9,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ParticipantList from "./components/ParticipantList";
 import { io } from "socket.io-client";
 import Participant from "./components/Participant";
+import './components/ParticipantList.css';
+import Searchbar from "./components/Searchbar";
 
 
 let once = 0; // to prevent increasing number of event listeners being added
@@ -30,12 +32,13 @@ function App() {
   const badgeOptions = badgeHex.map((badge) => String.fromCodePoint(badge));
 
   const [meetingId, setMeetingId] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
 
 
   const socketRef = useRef();
 
   // place your base url here
-  const address = 'https://dineel5.frp.zoomappgo.cloud/';
+  const address = 'https://selenashaw1.frp.zoomappgo.cloud/';
 
   useEffect(() => {
     socketRef.current = io(address);
@@ -47,6 +50,7 @@ function App() {
     socketRef.current.on('updatedMeeting', (updatedMeeting) => {
       // set state with the object in paramter
       setParticipants(updatedMeeting.participants);
+      setSuggestions(updatedMeeting.participants);
     })
 
 
@@ -109,11 +113,11 @@ function App() {
           const meetingResponse = await zoomSdk.getMeetingContext();
         // setMeetingContext(meetingResponse)
           console.log("get meeeting context", meetingResponse);
-          
+
          // console.log("get participants", getMeetingParticipantsResponse);
           zoomSdk.onParticipantChange((data) => {
             // double check the meetingResponse object to see which property meeting id is
-            socketRef.current.emit('newParticipant', data, meetingResponse)
+            socketRef.current.emit('newParticipant', data, meetingResponse, meetingUUIDResponse.meetingUUID)
           });
           
           fetch("meeting/save", {
@@ -133,7 +137,7 @@ function App() {
           }).then(async () => {
             const getMeetingParticipantsResponse = await zoomSdk.getMeetingParticipants();
             // setParticipants(getMeetingParticipantsResponse.participants)
-            socketRef.current.emit('newParticipant', { participants: [] }, meetingResponse)
+            socketRef.current.emit('newParticipant', { participants: [] }, meetingResponse, meetingUUIDResponse.meetingUUID)
           });
           zoomSdk.onShareApp((data) => {
             console.log(data);
@@ -270,12 +274,14 @@ function App() {
   return (
     <div className="App">
     <div className="participant-list-container">
+      {console.log(participants, "participants in app.js")}
+      <Searchbar setParticipants={ setParticipants } suggestions = {suggestions} />
       <div className="participant-list">
         {participants ? participants.map((p) => {
           console.log(p)
         return (
           <div>
-            <Participant isHost={currentUserRole == 'host'} meetingId={meetingContext.meetingID} socketRef={socketRef.current} name={p.screenName} badges={!p.badges ? [] : p.badges} badgeOptions={badgeOptions} />
+            <Participant isHost={currentUserRole == 'host'} meetingId={meetingId} socketRef={socketRef.current} name={p.screenName} badges={!p.badges ? [] : p.badges} badgeOptions={badgeOptions} />
           </div>
           )
         }) : null}

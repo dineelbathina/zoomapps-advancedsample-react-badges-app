@@ -104,9 +104,11 @@ io.on('connection', (socket) => {
   //   io.emit('updatedMeeting', meeting);
   // })
 
-  socket.on('newParticipant', async ({ participants }, meetingResponse) => {
-    // refresh 
-    let meeting = await Meeting.findOne({ meetingId: meetingResponse.meetingID });
+  socket.on('newParticipant', async ({ participants }, meetingResponse, meetingId) => {
+    // refresh
+    console.log(meetingId)
+    let meeting = await Meeting.findOne({ meetingId: meetingId });
+    console.log(meeting)
     // either add or remove participants
     for (let participant of participants) {
       if (participant.status === 'join') {

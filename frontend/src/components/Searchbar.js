@@ -6,16 +6,18 @@ class Searchbar extends React.Component {
     super(props);
     this.state = {
       input: "",
-      participants: this.props.participants
+      // participants: this.props.participants
     }
   }
 
   handleChange(e) {
     const input = e.target.value;
+    console.log(input);
     const { setParticipants } = this.props;
     this.setState({input: input}, () => {
-      const list = this.state.participants.filter(p => {
-        const name = p.name.toLowerCase();
+      // const list = this.state.participants.filter(p => {
+      const list = this.props.suggestions.filter(p => {
+        const name = p.screenName.toLowerCase();
         const input = this.state.input.toLowerCase();
         return input === "" || (name[0].includes(input[0]) && name.includes(input))
       });
