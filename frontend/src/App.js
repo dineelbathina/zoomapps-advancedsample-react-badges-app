@@ -28,7 +28,7 @@ function App() {
   const socketRef = useRef();
 
   // place your base url here
-  const address = 'https://selenashaw1.frp.zoomappgo.cloud';
+  const address = 'https://dineel5.frp.zoomappgo.cloud';
 
   useEffect(() => {
     socketRef.current = io(address);
@@ -86,22 +86,37 @@ function App() {
         // The config method returns the running context of the Zoom App
         setRunningContext(configResponse.runningContext);
         setUserContextStatus(configResponse.auth.status);
-        if (userContextResponse.role !== "attendee") {
-          const meetingResponse = await zoomSdk.getMeetingContext();
+        const meetingResponse = await zoomSdk.getMeetingContext();
           console.log("get meeeting context", meetingResponse);
+        if (userContextResponse.role !== "attendee") {
           const getMeetingParticipantsResponse = await zoomSdk.getMeetingParticipants();
           console.log("get participants", getMeetingParticipantsResponse);
           zoomSdk.onParticipantChange((data) => {
             console.log("on participant change", data);
+            fetch("meeting/updateParticipants", {
+              method: "POST",
+              body: JSON.stringify({
+                  meetingId: meetingResponse.meetingID,
+                  screenName: data.participants[0].screenName,
+                  participant: 
+                      { role: data.participants[0].role, participantId: data.participants[0].participantId, screenName: data.participants[0].screenName }
+  
+                  
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            console.log("on participant done", data);
           });
           fetch("meeting/save", {
             method: "POST",
             body: JSON.stringify({
                 meetingId: meetingResponse.meetingID,
                 meetingTopic: meetingResponse.meetingTopic,
-                hostUUID: userContextResponse.participantUUID,
+                hostUUID: userContextResponse.screenName,
                 participants: [
-                    { role: userContextResponse.role, participantId: '2', screenName: userContextResponse.screenName }
+                    { role: userContextResponse.role, participantId: userContextResponse.participantId, screenName: userContextResponse.screenName }
 
                 ]
             }),
